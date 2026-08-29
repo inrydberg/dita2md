@@ -1,0 +1,20 @@
+# DITA-OT installation
+dita-ot-*/
+
+# Input/output folders
+input/
+output/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Log files
+*.log
+logs/
+*.log.*
+
+# OS files
+.DS_Store
+Thumbs.db

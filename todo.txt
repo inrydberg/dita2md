@@ -1,0 +1,128 @@
+TODO List for DITA to Markdown Converter
+=========================================
+
+CONVERTER STATUS AS OF 2025-09-22:
+✅ PRODUCTION READY - Full hierarchical processing with MDX compatibility and intelligent naming
+
+[x] Basic DITA to Markdown conversion
+    - Python converter for single files
+    - DITA-OT integration
+
+[x] Docusaurus support
+    - Convert DITA notes to Docusaurus admonitions
+    - Post-processor for DITA-OT output
+    - Support for all note types (Note, Warning, Tip, Info, etc.)
+    
+[x] Fixed Issues:
+    - Caution notes now properly convert to :::danger (Docusaurus has no :::caution)
+    - Important notes now properly convert to :::info (better semantic match)
+    
+[x] Batch Processing Optimization:
+    - DITAMAP-based batch processing (single JVM invocation)
+    - Auto-generate DITAMAP if not present
+    - Reduced processing time from 70+ to 22-28 seconds for multiple files
+    
+[x] Input/Output Folder Structure:
+    - Standardized on input/ and output/ folders
+    - Removed test_output references
+    - Auto-scan for DITA files in batch mode
+
+COMPREHENSIVE TEST RESULTS (2025-09-19):
+========================================
+
+✅ Elements Working Correctly:
+- Notes: All types → Docusaurus admonitions
+  - note → :::note
+  - tip → :::tip  
+  - warning → :::warning
+  - important → :::info (uses Docusaurus info admonition)
+  - caution → :::danger (Docusaurus has no caution type)
+  - restriction → :::warning[Restriction] (custom label)
+  - danger → :::danger
+- Tables: Complex tables with proper Markdown formatting  
+- Inline formatting: <b>, <i>, <codeph>, <uicontrol>
+- Steps/Substeps: Proper numbered lists and nested lists
+- Code blocks: Preserved with proper formatting
+- Links: <xref> converted to Markdown links
+- HTML entities: &lt; and &gt; converted to backticks
+
+✅ Recently Fixed:
+- Restriction notes: Now convert to :::warning[Restriction] admonition
+
+✅ Recently Added Enhancements:
+- <shortdesc>: Now formatted as italic text after title for visual emphasis
+- Code blocks: Language hints normalized (```language-sql → ```sql)
+- Definition lists: Converted from bullet lists to proper Markdown definition list syntax
+
+⚠️ Not Implemented (technical limitations):
+- <prereq>, <context>, <result>: Cannot add section headers reliably (DITA-OT doesn't preserve section markers in markdown output)
+
+📝 Elements Found in Source Documentation:
+- Note types: note, tip, warning, important, caution, restriction, danger
+- Task elements: prereq, context, steps, substeps, cmd, info, result
+- Inline elements: uicontrol, codeph, filepath, cmdname, varname, userinput
+- Block elements: table, codeblock, screen, msgblock, fig, image
+- Special elements: xref, cite, shortdesc
+
+[x] Table conversion
+    - HTML tables to Markdown tables
+    - Lists in cells with <br/> tags
+    - HTML entities conversion (`<arg>` formatting)
+
+[x] Implement mdformat for automatic Markdown formatting
+    - Implemented but removed - unnecessary for automated pipeline
+    - DITA-OT already outputs clean Markdown
+    - Better suited for manual editing scenarios
+
+[x] Add support for more DITA elements
+    - Codeblocks with language highlighting ✅
+    - Definition lists ✅
+    - Complex nested structures (tables, lists, notes all working)
+
+[x] Performance optimizations
+    - Batch processing for large document sets (DITAMAP-based) ✅
+    - Reduced processing time from 70+ to 22-28 seconds using DITAMAP ✅
+    - Parallel processing evaluated but not needed (DITAMAP is already optimal) ✅
+
+[x] Testing improvements
+    - Added comprehensive unit tests for post-processor (13 tests) ✅
+    - Created test suite with test_postprocessor.py ✅
+    - Integrated into Makefile with `make test` command ✅
+
+[x] Hierarchical Document Processing (NEW - 2025-09-22)
+    - Automatic chapter numbering based on DITAMAP position ✅
+    - Intelligent folder naming from content titles ✅
+    - Two-phase folder renaming to avoid conflicts ✅
+    - Nested TOC generation with proper hierarchy ✅
+    - Docusaurus URL compatibility (handles numeric prefix stripping) ✅
+
+[x] MDX Compatibility Fixes (NEW - 2025-09-22)
+    - Fixed angle bracket escaping for patterns like `<arg>`, `<true | false>` ✅
+    - Smart regex with negative lookbehind/lookahead ✅
+    - Removed premature return that was skipping text processing ✅
+    - Full table content MDX compatibility ✅
+
+[x] Image Handling (Already implemented)
+    - Recursive image discovery and copying ✅
+    - Path preservation for relative references ✅
+    - Support for all common formats (PNG, JPG, GIF, SVG) ✅
+
+REMAINING TASKS:
+===============
+
+[ ] Add validation step
+    - Check for broken links
+    - Validate Docusaurus admonition syntax (partially done via MDX escaping)
+    - Ensure full MDX compatibility testing
+
+[ ] Configuration file support
+    - Allow custom note type mappings
+    - Configure output formats
+    - Set default directories
+    - Customize folder naming patterns
+
+[ ] Enhanced Features
+    - Support for DITA keyrefs and conrefs
+    - Cross-reference resolution between documents
+    - Glossary term processing
+    - Index generation from DITA indexterm elements
